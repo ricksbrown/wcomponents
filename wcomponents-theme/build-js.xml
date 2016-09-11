@@ -51,6 +51,22 @@
 				<include name="*.*"/>
 			</fileset>
 		</copy>
+		<copy todir="${lib.tmp.src.dir}/react" overwrite="true">
+			<fileset dir="${basedir}/node_modules/react/dist">
+				<include name="*.*"/>
+			</fileset>
+		</copy>
+		<copy todir="${lib.tmp.src.dir}/react-dom" overwrite="true">
+			<fileset dir="${basedir}/node_modules/react-dom/dist">
+				<include name="*.*"/>
+			</fileset>
+		</copy>
+		<copy todir="${lib.tmp.src.dir}/react-tabs" overwrite="true">
+			<fileset dir="${basedir}/node_modules/react-tabs/dist">
+				<include name="*.*"/>
+			</fileset>
+		</copy>
+			
 		<copy todir="${lib.tmp.src.dir}/getusermedia-js" overwrite="true">
 			<fileset dir="${basedir}/node_modules/getusermedia-js/dist">
 				<include name="**/*"/>

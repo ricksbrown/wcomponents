@@ -29,7 +29,9 @@
 						tracking: "lib/tracking/build/tracking-min",
 						getUserMedia: "lib/getusermedia-js/getUserMedia.min",
 						axs: "lib/axs_testing",
-						axe: "lib/axe.min"
+						axe: "lib/axe.min",
+						react: "lib/react/react-with-addons",
+						reactdom: "lib/react-dom/react-dom"
 					},
 					shim: {
 						tinyMCE: {

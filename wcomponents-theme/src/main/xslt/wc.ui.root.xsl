@@ -73,6 +73,18 @@
 				<xsl:call-template name="externalScript">
 					<xsl:with-param name="scriptName" select="'lib/require'"/>
 				</xsl:call-template>
+				
+<!--				<xsl:call-template name="externalScript">
+					<xsl:with-param name="scriptName" select="'lib/react/react'"/>
+				</xsl:call-template>
+				
+				<xsl:call-template name="externalScript">
+					<xsl:with-param name="scriptName" select="'lib/react-dom/react-dom'"/>
+				</xsl:call-template>
+				
+				<xsl:call-template name="externalScript">
+					<xsl:with-param name="scriptName" select="'lib/react-tabs/react-tabs'"/>
+				</xsl:call-template>-->
 
 				<!-- We can delete some script nodes after they have been used. To do this we need the script element to have an ID. -->
 				<xsl:variable name="scriptId" select="generate-id()"/>
