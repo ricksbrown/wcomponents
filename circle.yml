@@ -1,6 +1,7 @@
 machine:
   java:
     version: oraclejdk7
-test:
+dependencies:
   override:
-    - mvn verify
+    - mvn install -f wcomponents-i18n/pom.xml
+    - mvn dependency:resolve
