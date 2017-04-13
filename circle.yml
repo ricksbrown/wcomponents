@@ -3,5 +3,5 @@ machine:
     version: oraclejdk7
 dependencies:
   override:
-    - mvn clean install
+    - mvn clean install -Dmaven.javadoc.skip=true
     - mvn dependency:resolve
