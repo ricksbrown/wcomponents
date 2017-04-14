@@ -8,6 +8,7 @@ import com.github.bordertech.wcomponents.servlet.ServletRequest;
 import com.github.bordertech.wcomponents.servlet.WebXmlRenderContext;
 import com.github.bordertech.wcomponents.template.TemplateRenderer;
 import com.github.bordertech.wcomponents.template.TemplateRendererFactory;
+import com.github.bordertech.wcomponents.util.ConfigurationProperties;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collections;
@@ -43,7 +44,7 @@ public class TemplateRenderInterceptor extends InterceptorComponent {
 	@Override
 	public void preparePaint(final Request request) {
 		// TODO this should check the the response is actually HTML / Handlebars (not XML)
-		String mode = "off";
+		String mode = ConfigurationProperties.getTemplateRenderingMode();
 		doRender = "on".equals(mode);
 		if (!doRender && "sniff".equals(mode) && request instanceof ServletRequest) {
 			HttpServletRequest httpServletRequest = ((ServletRequest) request).getBackingRequest();
