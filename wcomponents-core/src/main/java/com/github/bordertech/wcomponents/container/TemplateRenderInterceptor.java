@@ -44,7 +44,7 @@ public class TemplateRenderInterceptor extends InterceptorComponent {
 	@Override
 	public void preparePaint(final Request request) {
 		// TODO this should check the the response is actually HTML / Handlebars (not XML)
-		String mode = "off";
+		String mode = "on";
 		doRender = "on".equals(mode);
 		if (!doRender && "sniff".equals(mode) && request instanceof ServletRequest) {
 			HttpServletRequest httpServletRequest = ((ServletRequest) request).getBackingRequest();
