@@ -3,9 +3,55 @@ define(["wc/dom/initialise",
 	"wc/dom/shed",
 	"wc/dom/formUpdateManager",
 	"wc/ui/ajax/processResponse",
+	"lib/vue/vue",
 	"wc/dom/cbrShedPublisher"],
-	function(initialise, Widget, shed, formUpdateManager, processResponse) {
+	function(initialise, Widget, shed, formUpdateManager, processResponse, Vue) {
 		"use strict";
+
+		Vue.component("wc-checkbox", {
+			render: function(createElement) {
+				var id = this.$attrs.id,
+					checkbox, args = {}, attrs = args.attrs = {};
+				if (this.$attrs.readOnly) {
+					attrs.id = id;
+					attrs["class"] = "wc-ro-input";
+					if (this.$attrs.selected) {
+						attrs["class"] += " wc_ro_sel";
+						attrs["data-wc-value"] = true;
+						attrs.title = "TODO i18n selected";
+					} else {
+						attrs["data-wc-value"] = false;
+						attrs.title = "TODO i18n unselected";
+					}
+					checkbox = createElement("span", args);
+					return checkbox;
+				} else {
+					attrs["class"] = "";
+					attrs.type = "checkbox";
+					attrs.value = true;
+					attrs.id = id + "_input";
+					attrs.name = id;
+					if (this.$attrs.selected) {
+						attrs["checked"] += "checked";
+					}
+					if (this.$attrs.groupName) {
+						attrs["data-wc-group"] = this.$attrs.groupName;
+					}
+					checkbox = createElement("input", args);
+					return createElement("span", {
+						"class": "wc-input-wrapper",
+						id: id
+					}, [checkbox]);
+				}
+			}
+		});
+
+		new Vue({
+			el: document.forms[0],
+			data: {
+
+			}
+		});
 
 		/**
 		 * @constructor

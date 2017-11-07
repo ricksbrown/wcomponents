@@ -20,7 +20,7 @@ final class WCheckBoxRenderer extends AbstractWebXmlRenderer {
 	/**
 	 * XML element name.
 	 */
-	private static final String TAG_NAME = "ui:checkbox";
+	private static final String TAG_NAME = true ? "ui:checkbox" : "wc-checkbox";
 	/**
 	 * Paints the given WCheckBox.
 	 *

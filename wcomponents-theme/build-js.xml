@@ -51,6 +51,11 @@
 				<include name="**/*"/>
 			</fileset>
 		</copy>
+		<copy todir="${lib.tmp.src.dir}/vue" overwrite="true">
+			<fileset dir="${basedir}/node_modules/vue/dist">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
 		<copy file="${basedir}/node_modules/i18next/i18next.js" tofile="${lib.tmp.src.dir}/i18next.js"/><!-- This is AMD and will be uglified -->
 		<copy file="${basedir}/node_modules/i18next-xhr-backend/i18nextXHRBackend.js" tofile="${lib.tmp.src.dir}/i18nextXHRBackend.js"/><!-- This is AMD and will be uglified -->
 		<copy file="${basedir}/node_modules/sprintf-js/src/sprintf.js" tofile="${lib.tmp.src.dir}/sprintf.js"/>
