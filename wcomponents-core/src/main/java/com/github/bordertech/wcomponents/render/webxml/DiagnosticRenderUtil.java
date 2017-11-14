@@ -17,11 +17,11 @@ public final class DiagnosticRenderUtil {
 	/**
 	 * The xml element name used for diagnostic output.
 	 */
-	private static final String TAG_NAME = "ui:fieldindicator";
+	private static final String TAG_NAME = "wc-fieldindicator";
 	/**
 	 * The xml element name used for each message in the diagnostic output.
 	 */
-	private static final String MESSAGE_TAG_NAME = "ui:message";
+	private static final String MESSAGE_TAG_NAME = "wc-message";
 
 	/**
 	 * Prevent instantiation.

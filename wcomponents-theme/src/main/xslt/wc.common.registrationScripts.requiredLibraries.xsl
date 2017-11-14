@@ -76,6 +76,15 @@
 					<xsl:text>"wc/ui/checkBoxSelect",</xsl:text>
 				</xsl:if>
 			</xsl:if>
+			<xsl:if test=".//html:wc-checkbox">
+				<xsl:text>"wc/ui/components/checkbox/checkbox",</xsl:text>
+			</xsl:if>
+			<xsl:if test=".//html:wc-message">
+				<xsl:text>"wc/ui/components/message",</xsl:text>
+			</xsl:if>
+			<xsl:if test=".//html:wc-fieldindicator">
+				<xsl:text>"wc/ui/components/fieldIndicator",</xsl:text>
+			</xsl:if>
 			<xsl:if test=".//ui:collapsible">
 				<xsl:text>"wc/ui/collapsible",</xsl:text>
 			</xsl:if>

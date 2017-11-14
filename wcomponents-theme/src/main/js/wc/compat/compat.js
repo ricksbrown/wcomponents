@@ -21,7 +21,7 @@
 define(["wc/has"], function(has) {
 	"use strict";
 	var global = window,
-		result = ["lib/dojo/sniff"];
+		result = ["lib/dojo/sniff", "lib/document-register-element/document-register-element"];
 
 	(function(addtest) {
 		// This block taken from tests from hasjs project. Didn't want to load the whole script.

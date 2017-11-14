@@ -58,9 +58,12 @@
 			<xsl:if test="ui:label/@for and ui:input//*[@id=$labelFor]">
 				<xsl:value-of select="local-name(ui:input//*[@id=$labelFor][1])"/>
 			</xsl:if>
+			<xsl:if test="ui:label/@for and html:wc-checkbox//*[@id=$labelFor]">
+				<xsl:value-of select="local-name(html:wc-checkbox//*[@id=$labelFor][1])"/>
+			</xsl:if>
 		</xsl:variable>
 		<xsl:choose>
-			<xsl:when test="$localEl eq 'radiobutton' or $localEl eq 'checkbox' or $localEl eq 'selecttoggle'">
+			<xsl:when test="$localEl eq 'radiobutton' or $localEl eq 'checkbox' or $localEl eq 'wc-checkbox' or $localEl eq 'selecttoggle'">
 				<!-- TODO could use an XSLT 2 function here -->
 				<xsl:number value="1"/>
 			</xsl:when>

@@ -68,6 +68,16 @@
 				<exclude name="*wrappers*"/>
 			</fileset>
 		</copy>
+		<copy todir="${lib.tmp.src.dir}/vue" overwrite="true">
+			<fileset dir="${basedir}/node_modules/vue/dist">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${lib.tmp.src.dir}/document-register-element" overwrite="true">
+			<fileset dir="${basedir}/node_modules/document-register-element/build" includes="**/*.js">
+				<include name="*.js"/>
+			</fileset>
+		</copy>
 		<copy todir="${lib.tmp.src.dir}/handlebars" overwrite="true">
 			<fileset dir="${basedir}/node_modules/handlebars/dist/amd"/>
 		</copy>
