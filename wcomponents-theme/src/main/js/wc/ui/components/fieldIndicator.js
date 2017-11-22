@@ -1,28 +1,26 @@
-require(["wc/ui/components/renderer"], function(renderer) {
-	var elementConfig = {
-		render: function(createElement) {
-			var className = "wc-fieldindicator wc-rel",
-				icon = "fa",
-				args = { attrs: { } };
-			if (this.$attrs.id) {
-				args.attrs.id = this.$attrs.id;
+require(["wc/ui/components/renderer", "wc/ui/components/Component", "wc/ui/components/util"], function(renderer, Component, util) {
+	var tagName = "wc-fieldindicator",
+		elementConfig = {
+			render: function(createElement, context) {
+				var component = new Component(),
+					className,
+					icon;
+				context.tagName = tagName;
+				className = util.attributes.makeCommonClass(context);
+				component.addClass(className);
+				if (context.data.attrs.id) {
+					this.attrs.id = context.data.attrs.id;
+				}
+				if (context.data.attrs.type === "warn") {
+					icon = "fa-exclamation-triangle";
+				} else {
+					icon = "fa-times-circle";
+				}
+				icon = util.icon(icon);
+				return createElement("span", component, [createElement(icon.tag, icon)].concat(context.children));
 			}
-			if (this.$attrs.type === "warn") {
-				className += " wc-fieldindicator-type-warn";
-				icon += " fa-exclamation-triangle";
-			} else {
-				className += " wc-fieldindicator-type-error";
-				icon += " fa-times-circle";
-			}
-			args.attrs["class"] = className;
-			return createElement("span", args, [createElement("i", {
-				attrs: {
-					"aria-hidden": true,
-					"class": icon
-				} } )].concat(this.$slots.default));
-		}
-	};
+		};
 
-	renderer.component("wc-fieldindicator", elementConfig);
+	renderer.component(tagName, elementConfig);
 });
 

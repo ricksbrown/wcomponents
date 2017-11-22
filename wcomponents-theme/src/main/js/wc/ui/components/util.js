@@ -1,16 +1,58 @@
 define([], function() {
-
+	var util = new RenderUtil();
 
 	function RenderUtil() {
+
+		this.icon = function(icon) {
+			var result = {
+				tag: "i",
+				attrs: {
+					"aria-hidden": true,
+					"class": "fa " + icon
+				}};
+			return result;
+		};
+
+		this.getTextContent = function(context) {
+			if (context.$vnode) {
+				return context.$vnode.text || "";
+			}
+			return context.textContent;
+		};
+
+		this.getTagName = function(context) {
+			if (context.tagName) {
+				return context.tagName.toLowerCase();
+			} else if (context.$vnode && context.$vnode.componentOptions) {
+				return context.$vnode.componentOptions.tag;
+			}
+			return "";
+		};
+
+		this.findChild = function(context, tagName) {
+			var i, next, childNodes = context.children;
+			for (i = 0; childNodes && i < childNodes.length; i++) {
+				next = childNodes[i];
+				if (util.getTagName(next) === tagName) {
+					return next;
+				}
+			}
+			return null;
+		};
+
 		this.attributes = {
 			accessKey: accessKey,
 			makeCommonClass: makeCommonClass
 		};
-		this.states = {
-			readonlyControl: function(element, createElement) {
-				var tagName = element.tagName.toLowerCase();
 
+		this.states = {
+			isReadOnly: function(context) {
+				if (context && context.data.attrs) {
+					return context.data.attrs.readonly || context.data.attrs.readOnly;
+				}
+				return false;
 			}
+		};
 	}
 
 	function accessKey(target, args, createElement) {
@@ -35,34 +77,11 @@ define([], function() {
 		return children;
 	}
 
-//
-//
-//
-//	function isInvalid(element) {
-//		if (ui:fieldindicator[not(@type='warn')]) {
-//			element.aria-invalid =
-//				"true"
-//			;
-//		}
-//	}
-//
-//
-//
-//	function ariaLabel(element) {
-//		if (@accessibleText) {
-//			element.aria-label =
-//				@accessibleText
-//			;
-//		}
-//	}
-//
-//
-//
-	function makeCommonClass(element, additional) {
-		var baseClass = element.tagName.toLowerCase(),
+	function makeCommonClass(context, additional) {
+		var baseClass = util.getTagName(context),
 			result = [baseClass],
-			margin = findChild(element, "wc-margin");
-		// if there is a child margin element
+			margin = util.findChild(context, "wc-margin");
+		// if there is a child margin context
 		if (margin) {
 			makeMarginClass(margin, result);
 		}
@@ -70,10 +89,10 @@ define([], function() {
 		if (additional) {
 			result = result.concat(additional);
 		}
-		classBuilderer(element, {
+		classBuilderer(context, {
 			"class": "",
 			type: function(val) {
-				if (baseClass !== "wc-file") {
+				if (baseClass && baseClass !== "wc-file") {
 					return baseClass + "-type-" + val;
 				}
 				return "";
@@ -87,26 +106,14 @@ define([], function() {
 			track: "wc_here"
 		}, result);
 
-		if (findChild(element, "wc-fieldindicator")) {
+		if (util.findChild(context, "wc-fieldindicator")) {
 			result.push("wc-rel");
 		}
 
 		return result.join(" ");
 	}
 
-	function findChild(element, tagName) {
-		var ucase = tagName.toUpperCase(),
-			i, next, childNodes = element.$slots["default"];
-		for (i = 0; i < childNodes.length; i++) {
-			next = childNodes[i];
-			if (next.tagName === ucase) {
-				return next;
-			}
-		}
-		return null;
-	}
-
-	function makeMarginClass(element, arr) {
+	function makeMarginClass(context, arr) {
 		var result = arr || [],
 			marginBuilder = function(extension, gap) {
 				if (gap) {
@@ -114,7 +121,7 @@ define([], function() {
 				}
 				return "";
 			};
-		classBuilderer(element, {
+		classBuilderer(context, {
 			all: marginBuilder.bind(this, "all-"),
 			north:  marginBuilder.bind(this, "n-"),
 			east:  marginBuilder.bind(this, "e-"),
@@ -124,10 +131,10 @@ define([], function() {
 		return result;
 	}
 
-	function classBuilderer(element, mapperer, arr) {
+	function classBuilderer(context, mapperer, arr) {
 		var result = arr || [], prop, val, computed, mapper;
 		for (prop in mapperer) {
-			val = element.$attrs[prop];
+			val = context.data.attrs[prop];
 			if (val) {
 				mapper = mapperer[prop];
 				if (!mapper) {
@@ -146,175 +153,6 @@ define([], function() {
 		}
 		return result;
 	}
-//
-//
-//
-//	function makeCommonClass(element, additional) {
-//		, additional
-//		element.class =
-//			commonClassHelper($additional);
-//		;
-//	}
-//
-//
-//
-//	function disabledElement(element, isControl = 1, field = .) {
-//		, isControl = 1
-//		, field = .
-//		if ($field/@disabled) {
-//			if (number($isControl) eq 1) {
-//					element.disabled =
-//						"disabled"
-//					;
-//				}else {
-//					element.aria-disabled =
-//						"true"
-//					;
-//				}
-//		}
-//	}
-//
-//
-//
-//	function hiddenElement(element) {
-//		element.hidden =
-//			"hidden"
-//		;
-//	}
-//
-//
-//
-//	function hideElementIfHiddenSet(element) {
-//		if (@hidden) {
-//			hiddenElement();
-//		}
-//	}
-//
-//
-//
-//	function requiredElement(element, field = ., useNative = 1) {
-//		, field = .
-//		, useNative = 1
-//		if ($field/@required) {
-//			if (number($useNative) eq 1) {
-//					element.required =
-//						"required"
-//					;
-//				}else {
-//					element.aria-required =
-//						"true"
-//					;
-//				}
-//		}
-//	}
-//
-//
-//
-//	function title(element) {
-//		if (@toolTip) {
-//			element.title =
-//				@toolTip
-//			;
-//		}
-//	}
-//
-//
-//
-//	function commonAttributes(element, isControl = 0, isWrapper = 0, class = '') {
-//		var isControl = 0,
-//			isWrapper = 0,
-//			className = "";
-//
-//		element.id =
-//			@id
-//		;
-//		makeCommonClass();
-//		hideElementIfHiddenSet();
-//		if (not(@readOnly or number($isWrapper) eq 1)) {
-//			disabledElement($isControl);
-//		}
-//	}
-//
-//
-//
-//	function commonWrapperAttributes(element, class = '') {
-//		, class = ''
-//
-//		commonAttributes(1, );
-//		title();
-//		ariaLabel();
-//		isInvalid();
-//	}
-//
-//
-//
-//	function wrappedInputAttributes(element, name = element.id, useTitle = 1, type = '') {
-//		, name = element.id
-//		, useTitle = 1
-//		, type = ''
-//
-//		element.id =
-//			concat(@id,'_input')
-//		;
-//		if ($name ne '') {
-//			element.name =
-//				$name
-//			;
-//		}
-//		if ($type ne '') {
-//			element.type =
-//				$type
-//			;
-//		}
-//		if (number($useTitle) eq 1) {
-//			title();
-//		}
-//		if (not(self::ui:multifileupload)) {
-//			requiredElement();
-//		}
-//		disabledElement();
-//		ariaLabel();
-//		if (@buttonId) {
-//			element.data-wc-submit =
-//				@buttonId
-//			;
-//		}
-//		isInvalid();
-//		if ((@submitOnChange and not(@list)) or (self::ui:dropdown and @optionWidth)) {
-//			element.class =
-//				if (@submitOnChange and not(@list)) {
-//					"wc_soc"
-//				}
-//				if (self::ui:dropdown and @optionWidth) {
-//					if ((@submitOnChange and not(@list))) {
-//						' '
-//					}
-//					"wc-dd-ow-"
-//					@optionWidth
-//				}
-//			;
-//		}
-//	}
-//
-//
-//	function wrappedTextInputAttributes(element, useTitle = 1, type = '') {
-//		, useTitle = 1
-//		, type = ''
-//		wrappedInputAttributes($useTitle, $type);
-//		if (@placeholder) {
-//			element.placeholder =
-//				@placeholder
-//			;
-//		}
-//	}
-//
-//
-//	function commonInputWrapperAttributes(element, class = '') {
-//		, class = ''
-//		commonAttributes();
-//	}
 
-
-
-	return new RenderUtil();
+	return util;
 });

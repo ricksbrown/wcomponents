@@ -63,7 +63,7 @@ final class WCheckBoxRenderer extends AbstractWebXmlRenderer {
 			return;
 		}
 		xml.appendClose();
-		DiagnosticRenderUtil.renderDiagnostics(checkBox, renderContext);
+		DiagnosticRenderUtil.renderDiagnostics(checkBox, renderContext, true);
 		xml.appendEndTag(TAG_NAME);
 	}
 

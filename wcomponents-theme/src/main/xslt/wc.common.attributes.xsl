@@ -208,12 +208,13 @@
 				<xsl:value-of select="$class"/>
 				<xsl:if test="not(@readOnly)">
 					<xsl:text> wc-fset-wrapper</xsl:text>
-				</xsl:if>
-				<xsl:if test="not(@readOnly or self::ui:checkboxselect[not(@frameless)] or self::ui:radiobuttonselect[not(@frameless)])">
-					<xsl:text> wc_noborder</xsl:text>
-				</xsl:if>
-				<xsl:if test="not(@readOnly) and @required">
-					<xsl:text> wc_req</xsl:text>
+				
+					<xsl:if test="not(self::ui:checkboxselect[not(@frameless)] or self::ui:radiobuttonselect[not(@frameless)])">
+						<xsl:text> wc_noborder</xsl:text>
+					</xsl:if>
+					<xsl:if test="@required">
+						<xsl:text> wc_req</xsl:text>
+					</xsl:if>
 				</xsl:if>
 			</xsl:with-param>
 		</xsl:call-template>

@@ -1,14 +1,15 @@
-require(["wc/ui/components/renderer"], function(renderer) {
-	var elementConfig = {
-		render: function(createElement) {
-			var options = { attrs: { "class": "wc-message" }};
-			if (this.$attrs.id) {
-				options.id = this.$attrs.id;
+require(["wc/ui/components/renderer", "wc/ui/components/Component", "wc/ui/components/util"], function(renderer, Component, util) {
+	var tagName = "wc-message",
+		elementConfig = {
+			render: function(createElement, context) {
+				var component = new Component(), className;
+				context.tagName = tagName;
+				className = util.attributes.makeCommonClass(context);
+				component.addClass(className);
+				return createElement("span", component, context.children);
 			}
-			return createElement("span", options, this.$slots.default);
-		}
-	};
+		};
 
-	renderer.component("wc-message", elementConfig);
+	renderer.component(tagName, elementConfig);
 });
 

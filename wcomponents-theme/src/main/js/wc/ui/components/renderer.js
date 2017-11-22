@@ -1,8 +1,14 @@
 /**
  * Provides a basic level of abstraction away from the ever-changing and somewhat annoying Custom Element spec.
  */
-define(["lib/vue/vue"], function(Vue) {
-	var replace = true,
+define([], function() {
+	var components = [],
+		instance = {
+			component: function() {
+				components.push(arguments);
+			}
+		},
+		replace = true,
 		useVue = window.localStorage["wc/ui/renderer/vue"] === "true";
 	/**
 	 * Helper for createElement - sets attributes on an Element from a provided associative array.
@@ -81,6 +87,7 @@ define(["lib/vue/vue"], function(Vue) {
 				break;
 			}
 		}
+		return to;
 	}
 
 	/**
@@ -96,14 +103,17 @@ define(["lib/vue/vue"], function(Vue) {
 		 * The return value of the render function will be added to the DOM in place (in the custom element).
 		 */
 		return function() {
-			var newNode;
+			var newNode, context;
 			if (args.render) {
 				try {
-					this.$attrs = extractAttributes(this);  // provide an easy lookup for the attributes
-					this.$slots = {};
-					this.$slots["default"] = [];
-					importKids(this, this.$slots["default"]);
-					newNode = args.render.call(this, createElement);
+					context = {
+						data: {
+							attrs: extractAttributes(this)  // provide an easy lookup for the attributes
+						},
+						children: importKids(this, []),
+						parent: this.parentNode
+					};
+					newNode = args.render.call(this, createElement, context);
 					if (newNode) {
 						this.removeAttribute("id");
 						if (replace) {
@@ -122,10 +132,6 @@ define(["lib/vue/vue"], function(Vue) {
 		};
 	}
 
-	function componentVue(name, args) {
-		Vue.component(name, args);
-	}
-
 	function component(name, args) {
 		var ElementProto;
 		if (name && (name.constructor === String || typeof name === "string")) {
@@ -138,17 +144,26 @@ define(["lib/vue/vue"], function(Vue) {
 	}
 
 	if (useVue) {
-		window.setTimeout(function() {
+		require(["lib/vue/vue"], function(Vue) {
+			instance.component = function(name, args) {
+				args["functional"] = true;
+				Vue.component(name, args);
+			};
+
+			while (components.length) {
+				instance.component.apply(instance, components.pop());
+			}
+
 			new Vue({
 				el: document.forms[0],
 				data: {
 
 				}
 			});
-		}, 5000);
+		});
+	} else {
+		instance.component = component;
 	}
 
-	return {
-		component: useVue ? componentVue : component
-	};
+	return instance;
 });

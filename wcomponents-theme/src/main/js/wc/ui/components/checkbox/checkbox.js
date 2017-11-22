@@ -1,74 +1,60 @@
-require(["wc/ui/components/renderer", "wc/ui/components/util", "wc/ui/checkBox"], function(renderer, util) {
-	var elementConfig = {
-		render: function(createElement) {
-			if (this.$attrs.readonly || this.$attrs.readOnly) {
-				return readonlyCheckbox(this, createElement);
-			} else {
-				return wrappedCheckbox(this, createElement);
+require(["wc/ui/components/renderer", "wc/ui/components/util", "wc/ui/components/Component", "wc/ui/checkBox"], function(renderer, util, Component) {
+	var tagName = "wc-checkbox",
+		elementConfig = {
+			render: function(createElement, ctxt) {
+				var context = ctxt || this;
+				context.tagName = tagName;
+				if (util.states.isReadOnly(context)) {
+					return readonlyCheckbox(createElement, context);
+				} else {
+					return wrappedCheckbox(createElement, context);
+				}
 			}
-		}
-	};
+		};
 
-	function wrappedCheckbox(obj, createElement) {
+	function wrappedCheckbox(createElement, context) {
 		var wrapper, checkbox,
-			id = obj.$attrs.id,
-			args = {},
-			attrs = args.attrs = {};
-		attrs["class"] = "";
-		attrs.type = "checkbox";
-		attrs.value = true;
-		attrs.id = id + "_input";
-		attrs.name = id;
-		if (obj.$attrs.selected) {
-			attrs["checked"] = "checked";
+			component = new Component();
+		component.attrs.type = "checkbox";
+		if (context.data.attrs.selected) {
+			component.attrs["checked"] = "checked";
 		}
-		if (obj.$attrs.groupName) {
-			attrs["data-wc-group"] = obj.$attrs.groupName;
+		component.attrs.value = true;
+		if (context.data.attrs.groupName) {
+			component.attrs["data-wc-group"] = context.data.attrs.groupName;
 		}
-		if (obj.$attrs.disabled) {
-			attrs.disabled = true;
-		}
-		if (obj.$attrs.required) {
-			attrs.required = true;
-		}
-		checkbox = createElement("input", args);
-		wrapper = createWrapper(obj, [checkbox].concat(obj.$slots.default), createElement);
+		component.wrappedInputAttributes(context, component.attrs);
+		checkbox = createElement("input", component);
+		wrapper = createWrapper(createElement, context, [checkbox].concat(context.children));
 		return wrapper;
 	}
 
-	function createWrapper(obj, childNodes, createElement) {
-		var className = util.attributes.makeCommonClass(obj, "wc-input-wrapper"),
-			args = {
-				attrs: {
-					"class": className,
-					id: obj.$attrs.id
-				}
-			};
-		return createElement("span", args, childNodes);
+	function createWrapper(createElement, context, children) {
+		var component = new Component();
+		component.commonInputWrapperAttributes(context, {});
+		return createElement("span", component, children);
 	}
 
-	function readonlyCheckbox(obj, createElement) {
-		var icon, checkbox, args = {}, attrs = args.attrs = {};
-		attrs.id = obj.$attrs.id;
-		attrs["class"] = "wc-ro-input";
-		attrs["data-wc-component"] = "checkbox";
-		if (obj.$attrs.selected) {
-			attrs["class"] += " wc_ro_sel";
-			attrs["data-wc-value"] = true;
-			attrs.title = "TODO i18n selected";
+	function readonlyCheckbox(createElement, context) {
+		var icon, checkbox, component = new Component();
+
+		component.attrs["class"] = "wc-ro-input";
+		if (context.data.attrs.selected) {
+			component.attrs["class"] += " wc_ro_sel";
+			component.attrs.title = "TODO i18n selected";
 			icon = "fa-check-square-o";
 		} else {
-			attrs["data-wc-value"] = false;
-			attrs.title = "TODO i18n unselected";
+			component.attrs.title = "TODO i18n unselected";
 			icon = "fa-square-o";
 		}
-		checkbox = createElement("span", args, [createElement("i", { attrs:{
-			"aria-hidden": true,
-			"class": "wc-checkbox fa " + icon
-		}})]);
+
+		component.readonlyControl(context, component.attrs);
+
+		icon = util.icon(icon);
+		checkbox = createElement("span", component, [createElement(icon.tag, icon)]);
 		return checkbox;
 	}
 
-	renderer.component("wc-checkbox", elementConfig);
+	renderer.component(tagName, elementConfig);
 });
 
