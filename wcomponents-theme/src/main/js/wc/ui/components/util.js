@@ -47,8 +47,9 @@ define([], function() {
 
 		this.states = {
 			isReadOnly: function(context) {
-				if (context && context.data.attrs) {
-					return context.data.attrs.readonly || context.data.attrs.readOnly;
+				var source = context.data.attrs;
+				if (context && source) {
+					return source.readonly || source.readOnly;
 				}
 				return false;
 			}
@@ -132,22 +133,24 @@ define([], function() {
 	}
 
 	function classBuilderer(context, mapperer, arr) {
-		var result = arr || [], prop, val, computed, mapper;
-		for (prop in mapperer) {
-			val = context.data.attrs[prop];
-			if (val) {
-				mapper = mapperer[prop];
-				if (!mapper) {
-					computed = val;
-				} else if (typeof mapper === "string") {
-					computed = mapper;
-				} else if (typeof mapper === "function") {
-					computed = mapper(val);
-				} else {
-					console.warn("Could not map", mapper);
-				}
-				if (computed) {
-					result.push(computed);
+		var result = arr || [], prop, val, computed, mapper, source = context.data.attrs;
+		if (source) {
+			for (prop in mapperer) {
+				val = source[prop];
+				if (val) {
+					mapper = mapperer[prop];
+					if (!mapper) {
+						computed = val;
+					} else if (typeof mapper === "string") {
+						computed = mapper;
+					} else if (typeof mapper === "function") {
+						computed = mapper(val);
+					} else {
+						console.warn("Could not map", mapper);
+					}
+					if (computed) {
+						result.push(computed);
+					}
 				}
 			}
 		}
