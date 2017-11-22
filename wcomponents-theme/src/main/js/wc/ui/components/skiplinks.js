@@ -1,0 +1,15 @@
+require(["wc/ui/components/renderer", "wc/ui/components/Component", "wc/ui/components/util"], function(renderer, Component, util) {
+	var tagName = "wc-skiplinks",
+		elementConfig = {
+			render: function(createElement, context) {
+				var component = new Component(), className;
+				context.tagName = tagName;
+				className = util.attributes.makeCommonClass(context);
+				component.addClass(className);
+				return createElement("nav", component, context.children);
+			}
+		};
+
+	renderer.component(tagName, elementConfig);
+});
+

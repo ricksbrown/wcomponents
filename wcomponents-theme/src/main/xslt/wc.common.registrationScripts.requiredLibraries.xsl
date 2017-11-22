@@ -76,6 +76,9 @@
 					<xsl:text>"wc/ui/checkBoxSelect",</xsl:text>
 				</xsl:if>
 			</xsl:if>
+			<xsl:if test=".//html:wc-skiplinks">
+				<xsl:text>"wc/ui/components/skiplinks",</xsl:text>
+			</xsl:if>
 			<xsl:if test=".//html:wc-checkbox">
 				<xsl:text>"wc/ui/components/checkbox/checkbox",</xsl:text>
 			</xsl:if>
