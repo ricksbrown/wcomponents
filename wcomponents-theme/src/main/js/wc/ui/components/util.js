@@ -29,11 +29,33 @@ define([], function() {
 			return "";
 		};
 
+		this.hasClass = function(context, className) {
+			var classes;
+			if (context.classList) {
+				// it's a DOM node
+				return context.classList.contains(className);
+			} else if (context.data && context.data.attrs && context.data.attrs["class"]) {
+				// it's a virtual node
+				classes = context.data.attrs["class"].split(/\s+/);
+				return classes.indexOf(className) > -1;
+			}
+			return false;
+		};
+
+		/**
+		 * Look for a child node by tagname.
+		 * In the case of a custom element it is possible that the node has been transformed into a regular HTML element.
+		 * For this reason we also check the class for the tagname, operating under the assumption that the original tagname
+		 * will be added to the css class attribute.
+		 * @param context The DOM (or Virtual DOM) context node.
+		 * @param tagName The name to search for.
+		 * @returns The matching node, if found.
+		 */
 		this.findChild = function(context, tagName) {
 			var i, next, childNodes = context.children;
 			for (i = 0; childNodes && i < childNodes.length; i++) {
 				next = childNodes[i];
-				if (util.getTagName(next) === tagName) {
+				if (util.getTagName(next) === tagName || util.hasClass(next, tagName)) {
 					return next;
 				}
 			}

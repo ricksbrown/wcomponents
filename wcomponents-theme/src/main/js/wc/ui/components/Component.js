@@ -37,10 +37,15 @@ define(["wc/ui/components/util"], function(util) {
 	};
 
 	Component.prototype.isInvalid = function (context) {
+		// TODO Should we mark components invalid in the renderer rather than having to compute with a DOM search?
 		var component = this,
 			diagnostic = util.findChild(context, "wc-fieldindicator");
-		if (diagnostic && diagnostic.$attrs.type !== "warn") {
-			component.attrs["aria-invalid"] = true;
+		if (diagnostic) {
+			if (diagnostic.data && diagnostic.data.attrs && diagnostic.data.attrs.type !== "warn") {
+				component.attrs["aria-invalid"] = true;
+			} else if (!util.hasClass(diagnostic, "wc-fieldindicator-type-warn")) {
+				component.attrs["aria-invalid"] = true;
+			}
 		}
 	};
 
