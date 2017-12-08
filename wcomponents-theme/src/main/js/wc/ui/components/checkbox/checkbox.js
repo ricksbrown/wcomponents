@@ -14,7 +14,7 @@ require(["wc/ui/components/renderer", "wc/ui/components/util", "wc/ui/components
 
 	function wrappedCheckbox(createElement, context) {
 		var wrapper, checkbox,
-			component = new Component();
+			component = new Component(context);
 		component.attrs.type = "checkbox";
 		if (context.data.attrs.selected) {
 			component.attrs["checked"] = "checked";
@@ -23,20 +23,20 @@ require(["wc/ui/components/renderer", "wc/ui/components/util", "wc/ui/components
 		if (context.data.attrs.groupName) {
 			component.attrs["data-wc-group"] = context.data.attrs.groupName;
 		}
-		component.wrappedInputAttributes(context, component.attrs);
+		component.wrappedInputAttributes(component.attrs);
 		checkbox = createElement("input", component);
 		wrapper = createWrapper(createElement, context, [checkbox].concat(context.children));
 		return wrapper;
 	}
 
 	function createWrapper(createElement, context, children) {
-		var component = new Component();
-		component.commonInputWrapperAttributes(context, {});
+		var component = new Component(context);
+		component.commonInputWrapperAttributes({});
 		return createElement("span", component, children);
 	}
 
 	function readonlyCheckbox(createElement, context) {
-		var icon, checkbox, component = new Component();
+		var icon, checkbox, component = new Component(context);
 
 		component.attrs["class"] = "wc-ro-input";
 		if (context.data.attrs.selected) {
@@ -48,7 +48,7 @@ require(["wc/ui/components/renderer", "wc/ui/components/util", "wc/ui/components
 			icon = "fa-square-o";
 		}
 
-		component.readonlyControl(context, component.attrs);
+		component.readonlyControl(component.attrs);
 
 		icon = util.icon(icon);
 		checkbox = createElement("span", component, [createElement(icon.tag, icon)]);

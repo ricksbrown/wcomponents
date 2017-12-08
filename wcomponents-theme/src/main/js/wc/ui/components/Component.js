@@ -24,9 +24,9 @@ define(["wc/ui/components/util"], function(util) {
 		} while (i < len);
 	};
 
-	Component.prototype.requiredElement = 	function (context, args) {
+	Component.prototype.requiredElement = function (args) {
 		var component = this,
-			source = context.data.attrs;
+			source = component.context.data.attrs;
 		if (source.required) {
 			if (args.useNative !== false) {  // if not explicitly set to false then defaults to true
 				component.attrs.required = "required";
@@ -36,10 +36,10 @@ define(["wc/ui/components/util"], function(util) {
 		}
 	};
 
-	Component.prototype.isInvalid = function (context) {
+	Component.prototype.isInvalid = function () {
 		// TODO Should we mark components invalid in the renderer rather than having to compute with a DOM search?
 		var component = this,
-			diagnostic = util.findChild(context, "wc-fieldindicator");
+			diagnostic = util.findChild(component.context, "wc-fieldindicator");
 		if (diagnostic) {
 			if (diagnostic.data && diagnostic.data.attrs && diagnostic.data.attrs.type !== "warn") {
 				component.attrs["aria-invalid"] = true;
@@ -49,9 +49,9 @@ define(["wc/ui/components/util"], function(util) {
 		}
 	};
 
-	Component.prototype.disabledElement = function(context, args) {
+	Component.prototype.disabledElement = function(args) {
 		var component = this,
-			source = context.data.attrs;
+			source = component.context.data.attrs;
 		if (component && source.disabled) {
 			if (args.isControl !== false) {  // defaults to true unless explicitly false
 				component.attrs.disabled = "disabled";
@@ -61,17 +61,17 @@ define(["wc/ui/components/util"], function(util) {
 		}
 	};
 
-	Component.prototype.hideElementIfHiddenSet = function(context) {
+	Component.prototype.hideElementIfHiddenSet = function() {
 		var component = this,
-			source = context.data.attrs;
+			source = component.context.data.attrs;
 		if (component && source.hidden) {
 			component.attrs.hidden = "hidden";
 		}
 	};
 
-	Component.prototype.title = function(context) {
+	Component.prototype.title = function() {
 		var component = this,
-			source = context.data.attrs;
+			source = component.context.data.attrs;
 		if (component) {
 			if (source.toolTip) {
 				component.attrs.title = source.toolTip;
@@ -79,29 +79,29 @@ define(["wc/ui/components/util"], function(util) {
 		}
 	};
 
-	Component.prototype.commonAttributes = function(context, args) {
+	Component.prototype.commonAttributes = function(args) {
 		var component = this,
-			source = context.data.attrs;
+			source = component.context.data.attrs;
 		if (component) {
 			if (source.id) {
 				component.attrs.id = source.id;
 			}
-			component.addClass(util.attributes.makeCommonClass(context, args["class"]));
-			component.hideElementIfHiddenSet(context, args);
-			if (!(util.states.isReadOnly(context) || args.isWrapper)) {
-				component.disabledElement(context, args);
+			component.addClass(util.attributes.makeCommonClass(component.context, args["class"]));
+			component.hideElementIfHiddenSet(args);
+			if (!(util.states.isReadOnly(component.context) || args.isWrapper)) {
+				component.disabledElement(args);
 			}
 		}
 	};
 
-	Component.prototype.commonWrapperAttributes = function(context, args) {
+	Component.prototype.commonWrapperAttributes = function(args) {
 		var component = this,
-			source = context.data.attrs,
-			tagName = util.getTagName(context);
+			source = component.context.data.attrs,
+			tagName = util.getTagName(component.context);
 		if (component) {
 			args.isWrapper = true;
 
-			if (!util.states.isReadOnly(context)) {
+			if (!util.states.isReadOnly(component.context)) {
 				component.addClass(args["class"], "wc-fset-wrapper");
 
 				if (((tagName === "wc-checkboxselect" || tagName === "wc-radiobuttonselect") && !source.frameless)) {
@@ -113,17 +113,17 @@ define(["wc/ui/components/util"], function(util) {
 				}
 			}
 
-			component.commonAttributes(context, args);
-			component.title(context, args);
-			component.ariaLabel(context, args);
-			component.isInvalid(context, args);
+			component.commonAttributes(args);
+			component.title(args);
+			component.ariaLabel(args);
+			component.isInvalid(args);
 		}
 	};
 
-	Component.prototype.wrappedInputAttributes = function(context, args) {
+	Component.prototype.wrappedInputAttributes = function(args) {
 		var component = this,
-			source = context.data.attrs,
-			tagName = util.getTagName(context);
+			source = component.context.data.attrs,
+			tagName = util.getTagName(component.context);
 		if (component) {
 			component.attrs.id = source.id + "_input";
 			component.attrs.name = args.name || source.id;
@@ -133,20 +133,20 @@ define(["wc/ui/components/util"], function(util) {
 			}
 
 			if (args.useTitle) {
-				component.title(context, args);
+				component.title(args);
 			}
 
 			if (tagName !== "wc-multifileupload") {
-				component.requiredElement(context, args);
+				component.requiredElement(args);
 			}
-			component.disabledElement(context, args);
-			component.ariaLabel(context, args);
+			component.disabledElement(args);
+			component.ariaLabel(args);
 
 			if (source.buttonId) {
 				component.attrs["data-wc-submit"] = source.buttonId;
 			}
 
-			component.isInvalid(context, args);
+			component.isInvalid(args);
 
 			if ((source.submitOnChange && !source.list) || (tagName === "ui:dropdown" && source.optionWidth)) {
 				if (source.submitOnChange && !source.list) {
@@ -160,30 +160,30 @@ define(["wc/ui/components/util"], function(util) {
 		}
 	};
 
-	Component.prototype.wrappedTextInputAttributes = function(context, args) {
+	Component.prototype.wrappedTextInputAttributes = function(args) {
 		var component = this,
-			source = context.data.attrs;
+			source = component.context.data.attrs;
 		if (component) {
-			component.wrappedInputAttributes(context, args);
+			component.wrappedInputAttributes(args);
 			if (source.placeholder) {
 				component.attrs.placeholder = source.placeholder;
 			}
 		}
 	};
 
-	Component.prototype.commonInputWrapperAttributes = function(context, args) {
+	Component.prototype.commonInputWrapperAttributes = function(args) {
 		var component = this;
 		if (component) {
 			component.addClass(args["class"], "wc-input-wrapper");
-			component.commonAttributes(context, args);
+			component.commonAttributes(args);
 		}
 	};
 
-	Component.prototype.readOnlyValue = function(context) {
+	Component.prototype.readOnlyValue = function() {
 		var component = this,
-			source = context.data.attrs,
+			source = component.context.data.attrs,
 			value = null,
-			tagName = util.getTagName(context);
+			tagName = util.getTagName(component.context);
 		if (tagName === "wc-checkbox" || tagName === "wc-radiobutton" || tagName === "wc-togglebutton") {
 			value = !!source.selected;
 		} else if (tagName === "wc-datefield" && source.date) {
@@ -193,36 +193,36 @@ define(["wc/ui/components/util"], function(util) {
 				component.attrs["datetime"] = source.date;
 			}
 		} else if (tagName === "wc-numberfield") {
-			value = util.getTextContent(context);
+			value = util.getTextContent(component.context);
 		}
 		if (value !== null) {
 			component.attrs["data-wc-value"] = value;
 		}
 	};
 
-	Component.prototype.ariaLabel = function(context) {
+	Component.prototype.ariaLabel = function() {
 		var component = this,
-			source = context.data.attrs;
+			source = component.context.data.attrs;
 		if (source.accessibleText) {
 			component.attrs["aria-label"] = source.accessibleText;
 		}
 	};
 
-	Component.prototype.roComponentName = function(context) {
+	Component.prototype.roComponentName = function() {
 		var component = this,
-			tagName = util.getTagName(context);
+			tagName = util.getTagName(component.context);
 		component.attrs["data-wc-component"] = tagName.replace(/^wc-/, "");
 	};
 
-	Component.prototype.readonlyControl = function(context, args) {
+	Component.prototype.readonlyControl = function(args) {
 		var component = this,
-			source = context.data.attrs,
-			elementName, tagName = util.getTagName(context);
+			source = component.context.data.attrs,
+			elementName, tagName = util.getTagName(component.context);
 		if (args.isList) {
 			elementName = "ul";
 			component.addClass("wc_list_nb");
 		} else if (tagName === "wc-textarea") {
-			if (util.findChild(context, "wc-rtf")) {
+			if (util.findChild(component.context, "wc-rtf")) {
 				elementName = "div";
 			} else {
 				elementName = "pre";
@@ -238,17 +238,26 @@ define(["wc/ui/components/util"], function(util) {
 		}
 
 		component.tagName = elementName;
-		component.commonAttributes(context, args);
-		component.roComponentName(context);
-		component.readOnlyValue(context);
+		component.commonAttributes(args);
+		component.roComponentName();
+		component.readOnlyValue();
 	};
 
 	/**
-	 * Helper class used to pass arguments to `createElement`.
+	 * Used to describe the element we want created by `createElement`.
 	 *
+	 * @param context Source element.
 	 * @constructor
 	 */
-	function Component() {
+	function Component(context) {
+
+		Object.defineProperty(this, "context", {
+			enumerable: false,
+			configurable: false,
+			writable: false,
+			value: context
+		});
+
 		this.attrs = {};
 	}
 

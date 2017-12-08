@@ -2,7 +2,7 @@ require(["wc/ui/components/renderer", "wc/ui/components/Component", "wc/ui/compo
 	var tagName = "wc-skiplinks",
 		elementConfig = {
 			render: function(createElement, context) {
-				var component = new Component(), className;
+				var component = new Component(context), className;
 				context.tagName = tagName;
 				className = util.attributes.makeCommonClass(context);
 				component.addClass(className);

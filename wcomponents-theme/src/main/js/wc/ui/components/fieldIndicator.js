@@ -2,7 +2,7 @@ require(["wc/ui/components/renderer", "wc/ui/components/Component", "wc/ui/compo
 	var tagName = "wc-fieldindicator",
 		elementConfig = {
 			render: function(createElement, context) {
-				var component = new Component(),
+				var component = new Component(context),
 					className,
 					icon;
 				context.tagName = tagName;
