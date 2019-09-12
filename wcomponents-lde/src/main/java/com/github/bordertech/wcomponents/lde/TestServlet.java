@@ -23,7 +23,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.server.ServerConnector;
+
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
@@ -70,8 +71,8 @@ public abstract class TestServlet extends WServlet implements LdeLauncher {
 			server = new Server();
 		}
 
-		SocketConnector connector = new SocketConnector();
-		connector.setMaxIdleTime(0);
+		ServerConnector connector = new ServerConnector(server);
+		connector.setIdleTimeout(0);
 		connector.setPort(getLdePort());
 		server.addConnector(connector);
 
@@ -102,7 +103,7 @@ public abstract class TestServlet extends WServlet implements LdeLauncher {
 		int timeout = ConfigurationProperties.getLdeServerSessionTimeout();
 
 		if (timeout > 0) {
-			webapp.getSessionHandler().getSessionManager().setMaxInactiveInterval(timeout);
+			webapp.getSessionHandler().setMaxInactiveInterval(timeout);
 		}
 
 		// Server started successfully, log the URL for the LDE.

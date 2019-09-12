@@ -4,6 +4,11 @@
 
 ### API Changes
 
+* Upgraded jetty from 8.1.16.v20140903 to 9.4.6.v20170531 which has a different API.
+  This was necessary due to bugs and CVEs in the older version of Jetty.
+  I am not sure if this will affect any consumers, if so please take a look how I
+  adapted to the new API in `com.github.bordertech.wcomponents.lde.TestServlet`
+
 ### Enhancements
 
 * PhantomJS replaced with Firefox Headless for selenium testing #1650.

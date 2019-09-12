@@ -17,7 +17,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<jetty.version>8.1.16.v20140903</jetty.version>
+		<jetty.version>9.4.6.v20170531</jetty.version>
 		<bt.qa.skip>false</bt.qa.skip>
 		<enforcer.fail>false</enforcer.fail>
 		<!-- Remove once qa-parent lets pmd.verbose be set via a property (as it is set in the config). -->

@@ -6,7 +6,7 @@ import com.github.bordertech.wcomponents.servlet.ThemeServlet;
 import com.github.bordertech.wcomponents.servlet.WServlet;
 import java.util.Date;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
@@ -44,8 +44,8 @@ public class HelloWServlet extends WServlet {
 		// Use jetty to run the servlet.
 		Server server = new Server();
 
-		SocketConnector connector = new SocketConnector();
-		connector.setMaxIdleTime(0);
+		ServerConnector connector = new ServerConnector(server);
+		connector.setIdleTimeout(0);
 		connector.setPort(8080);
 		server.addConnector(connector);
 
